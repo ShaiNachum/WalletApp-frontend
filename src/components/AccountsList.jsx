@@ -115,11 +115,6 @@ const AccountsList = ({ onAccountSelect, selectedAccountId, refreshTrigger }) =>
       {accounts.length > 0 && (
         <div className="mt-4 text-sm text-gray-400">
           Total: {accounts.length} accounts
-          {selectedAccountId && (
-            <span className="ml-4 text-emerald-400">
-              • Selected Account ID: {selectedAccountId}
-            </span>
-          )}
         </div>
       )}
     </div>

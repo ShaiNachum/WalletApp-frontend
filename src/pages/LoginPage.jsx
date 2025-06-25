@@ -1,5 +1,6 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import { useAuth } from "../components/AuthContext";
 import api from "../lib/axios";
 
 const LoginPage = () => {
@@ -9,6 +10,16 @@ const LoginPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   
   const navigate = useNavigate();
+  const location = useLocation();
+  const { isAuthenticated, login } = useAuth();
+
+  // Redirect to dashboard if already authenticated
+  useEffect(() => {
+    if (isAuthenticated) {
+      const from = location.state?.from?.pathname || '/dashboard';
+      navigate(from, { replace: true });
+    }
+  }, [isAuthenticated, navigate, location]);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -26,7 +37,11 @@ const LoginPage = () => {
       
       if (response.data === true) {
         console.log("Login successful", response.data);
-        navigate("/dashboard");
+        
+        login();
+        
+        const from = location.state?.from?.pathname || '/dashboard';
+        navigate(from, { replace: true });
       } else {
         setMessage("Login Error");
       }

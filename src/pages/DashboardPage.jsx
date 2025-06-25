@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../components/AuthContext";
 import AccountsList from "../components/AccountsList";
 import AccountBalance from "../components/AccountBalance";
 import NewAccount from "../components/NewAccount";
@@ -7,11 +8,12 @@ import NewTransfer from "../components/NewTransfer";
 
 const DashboardPage = () => {
   const [selectedAccount, setSelectedAccount] = useState(null);
-  
+
   const [accountsRefreshTrigger, setAccountsRefreshTrigger] = useState(null);
   const [balanceRefreshTrigger, setBalanceRefreshTrigger] = useState(null);
 
   const navigate = useNavigate();
+  const { logout } = useAuth();
 
   const handleAccountSelect = (account) => {
     setSelectedAccount(account);
@@ -29,8 +31,9 @@ const DashboardPage = () => {
   };
 
   const handleLogout = () => {
-    // Clear any stored user data if needed (for future authentication state)
-    navigate("/");
+    // Clear authentication state using auth context
+    logout();
+    navigate("/", { replace: true });
   };
 
   return (
@@ -52,7 +55,7 @@ const DashboardPage = () => {
                 Wallet Dashboard
               </h1>
             </div>
-            
+
             {/* Logout Button */}
             <button
               onClick={handleLogout}
@@ -94,7 +97,7 @@ const DashboardPage = () => {
 
             {/* New Transfer Section */}
             <div className="xl:col-span-1">
-              <NewTransfer 
+              <NewTransfer
                 onTransactionComplete={handleTransactionComplete}
                 accountsRefreshTrigger={accountsRefreshTrigger}
               />
